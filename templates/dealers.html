@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Become a Dealer — Hyoxen{% endblock %}
+{% block content %}
+<section style="padding: 180px 0 80px;">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="reveal">
+        <span class="eyebrow">— BECOME A PARTNER</span>
+        <h1 style="font-size: clamp(44px, 6vw, 80px); margin-top: 20px;">A dealership designed<br>for the people who'll<br>actually <span style="font-family:var(--f-serif); font-style:italic; color:var(--ion);">run it.</span></h1>
+        <p style="font-size: 17px; color: var(--mist-2); line-height: 1.6; margin: 32px 0; max-width: 540px;">Hyoxen's franchise is women-led by design. Training, financing, technology, and a route to ownership — built into the model from day one.</p>
+
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 40px 0; border-top: 1px solid var(--hairline); padding-top: 32px;">
+          <div><div style="font-family:var(--f-display); font-size:40px; font-weight:300; color:var(--ion);">62%</div><div class="mono" style="font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--mist); margin-top:6px;">Women-Led</div></div>
+          <div><div style="font-family:var(--f-display); font-size:40px; font-weight:300; color:var(--ion);">₹0</div><div class="mono" style="font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--mist); margin-top:6px;">Down Payment</div></div>
+          <div><div style="font-family:var(--f-display); font-size:40px; font-weight:300; color:var(--ion);">90<sub style="font-size:0.4em;color:var(--mist)">days</sub></div><div class="mono" style="font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--mist); margin-top:6px;">Setup Time</div></div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <form id="dealer-form" class="lead-form" style="background: var(--carbon); border: 1px solid var(--hairline); border-radius: 8px; padding: 36px;">
+          <input type="hidden" name="audience" value="dealer" />
+          <h3 style="font-size: 22px; margin-bottom: 24px;">Apply for a franchise</h3>
+          <label>Your name<input type="text" name="name" required /></label>
+          <div class="form-row">
+            <label>Email<input type="email" name="email" required /></label>
+            <label>Phone<input type="tel" name="phone" required /></label>
+          </div>
+          <label>City you'd like to serve<input type="text" name="company" placeholder="e.g. Nashik, Coimbatore" required /></label>
+          <label>Tell us about yourself<textarea name="message" rows="4" placeholder="Background, current work, why Hyoxen..."></textarea></label>
+          <button type="submit" class="btn btn-primary" style="margin-top: 8px; width: 100%; justify-content: center;">Submit Application <span class="arrow">→</span></button>
+          <div id="dealer-msg" class="mono" style="font-size:12px; margin-top: 14px; min-height: 14px; color: var(--mint);"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('dealer-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const data = Object.fromEntries(new FormData(form).entries());
+  const msg = document.getElementById('dealer-msg');
+  msg.textContent = 'Submitting...';
+  try {
+    const res = await fetch('/api/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    msg.textContent = json.ok ? '✓ ' + json.message : '✗ ' + (json.error || 'Something went wrong');
+    if (json.ok) form.reset();
+  } catch (err) {
+    msg.textContent = '✗ Network error.';
+  }
+});
+</script>
+{% endblock %}

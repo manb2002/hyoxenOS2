@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Server Error — Hyoxen{% endblock %}
+{% block content %}
+<section style="min-height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center;">
+  <div class="container">
+    <span class="eyebrow" style="justify-content: center;">— ERROR · 500</span>
+    <h1 style="font-size: clamp(48px, 8vw, 96px); margin: 24px 0;">Signal lost.</h1>
+    <p style="color: var(--mist-2); margin-bottom: 32px;">Our grid hiccuped. We're already on it.</p>
+    <a href="{{ url_for('home') }}" class="btn btn-primary">Return Home <span class="arrow">→</span></a>
+  </div>
+</section>
+{% endblock %}

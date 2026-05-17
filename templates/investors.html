@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Investors — Hyoxen{% endblock %}
+{% block content %}
+<section style="padding: 180px 0 80px;">
+  <div class="container">
+    <div class="reveal" style="max-width: 760px;">
+      <span class="eyebrow">— INVESTORS</span>
+      <h1 style="font-size: clamp(48px, 7vw, 88px); margin-top: 20px;">The intelligence layer<br>for Indian <span style="font-family:var(--f-serif); font-style:italic; color:var(--ion);">mobility.</span></h1>
+      <p style="font-size: 18px; color: var(--mist-2); line-height: 1.6; margin: 36px 0;">Five vehicles. One charging grid. One operating system. Audited numbers, quarterly. The brief lives below.</p>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 60px 0 100px;">
+  <div class="container">
+    <div class="numbers-grid">
+      {% for n in numbers %}
+      <div class="num-cell">
+        <div class="v">{{ n.value }}{% if n.sup %}<sup>{{ n.sup }}</sup>{% endif %}</div>
+        <div class="l">{{ n.label|safe }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="numbers-foot">— DATA REFRESHED MONTHLY · INDEPENDENTLY AUDITED · FY26E</div>
+  </div>
+</section>
+
+<section style="padding: 80px 0;">
+  <div class="container" style="max-width: 720px;">
+    <h2 style="margin-bottom: 36px;">Get the brief.</h2>
+    <form id="investor-form" class="lead-form">
+      <input type="hidden" name="audience" value="investor" />
+      <div class="form-row">
+        <label>Name<input type="text" name="name" required /></label>
+        <label>Email<input type="email" name="email" required /></label>
+      </div>
+      <div class="form-row">
+        <label>Firm<input type="text" name="company" /></label>
+        <label>Phone (optional)<input type="tel" name="phone" /></label>
+      </div>
+      <label>Investment focus / questions<textarea name="message" rows="3"></textarea></label>
+      <button type="submit" class="btn btn-primary" style="margin-top: 16px;">Request Investor Brief <span class="arrow">↗</span></button>
+      <div id="investor-msg" class="mono" style="font-size:12px; margin-top: 14px; min-height: 14px; color: var(--mint);"></div>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('investor-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  const msg = document.getElementById('investor-msg');
+  msg.textContent = 'Submitting...';
+  try {
+    const res = await fetch('/api/lead', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+    const json = await res.json();
+    msg.textContent = json.ok ? '✓ ' + json.message : '✗ ' + (json.error || '');
+    if (json.ok) e.target.reset();
+  } catch (err) { msg.textContent = '✗ Network error.'; }
+});
+</script>
+{% endblock %}

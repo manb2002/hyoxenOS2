@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Contact — Hyoxen{% endblock %}
+{% block content %}
+<section style="padding: 180px 0 80px;">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="reveal">
+        <span class="eyebrow">— CONTACT</span>
+        <h1 style="font-size: clamp(44px, 6vw, 80px); margin-top: 20px;">Let's <span style="font-family:var(--f-serif); font-style:italic; color:var(--ion);">talk.</span></h1>
+        <p style="font-size: 17px; color: var(--mist-2); line-height: 1.6; margin: 32px 0 40px;">Whether you're a fleet operator, dealer prospect, investor, or just curious — drop us a line.</p>
+
+        <div style="display:grid; gap: 28px; border-top: 1px solid var(--hairline); padding-top: 32px;">
+          <div>
+            <div class="mono" style="font-size:10px; letter-spacing:0.16em; color:var(--mist); text-transform:uppercase; margin-bottom:6px;">— Email</div>
+            <a href="mailto:hello@hyoxen.com" style="font-family:var(--f-display); font-size:22px; color:var(--white);">hello@hyoxen.com</a>
+          </div>
+          <div>
+            <div class="mono" style="font-size:10px; letter-spacing:0.16em; color:var(--mist); text-transform:uppercase; margin-bottom:6px;">— Phone</div>
+            <a href="tel:+918040000000" style="font-family:var(--f-display); font-size:22px; color:var(--white);">+91 80 4000 0000</a>
+          </div>
+          <div>
+            <div class="mono" style="font-size:10px; letter-spacing:0.16em; color:var(--mist); text-transform:uppercase; margin-bottom:6px;">— WhatsApp</div>
+            <a href="https://wa.me/918040000000" target="_blank" rel="noopener" style="font-family:var(--f-display); font-size:22px; color:var(--white);">Chat with us →</a>
+          </div>
+          <div>
+            <div class="mono" style="font-size:10px; letter-spacing:0.16em; color:var(--mist); text-transform:uppercase; margin-bottom:6px;">— HQ</div>
+            <div style="font-family:var(--f-display); font-size:18px; color:var(--white); line-height:1.5;">Hyoxen Vehicle Technology Pvt. Ltd.<br>Mumbai · Bangalore · Delhi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <form id="contact-form" class="lead-form" style="background: var(--carbon); border: 1px solid var(--hairline); border-radius: 8px; padding: 36px;">
+          <input type="hidden" name="audience" value="general" />
+          <h3 style="font-size: 22px; margin-bottom: 24px;">Send a message</h3>
+          <div class="form-row">
+            <label>Name<input type="text" name="name" required /></label>
+            <label>Email<input type="email" name="email" required /></label>
+          </div>
+          <label>Phone (optional)<input type="tel" name="phone" /></label>
+          <label>Message<textarea name="message" rows="5" required></textarea></label>
+          <button type="submit" class="btn btn-primary" style="margin-top: 12px; width: 100%; justify-content: center;">Send <span class="arrow">→</span></button>
+          <div id="contact-msg" class="mono" style="font-size:12px; margin-top: 14px; min-height: 14px; color: var(--mint);"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('contact-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  const msg = document.getElementById('contact-msg');
+  msg.textContent = 'Sending...';
+  try {
+    const res = await fetch('/api/lead', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+    const json = await res.json();
+    msg.textContent = json.ok ? '✓ ' + json.message : '✗ ' + (json.error || '');
+    if (json.ok) e.target.reset();
+  } catch (err) { msg.textContent = '✗ Network error.'; }
+});
+</script>
+{% endblock %}

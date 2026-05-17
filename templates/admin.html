@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Admin — Leads | Hyoxen{% endblock %}
+{% block content %}
+<section style="padding: 140px 0 60px;">
+  <div class="container">
+    <span class="eyebrow">— ADMIN · LEADS</span>
+    <h1 style="font-size: clamp(36px, 5vw, 56px); margin: 20px 0;">Captured leads ({{ leads|length }})</h1>
+    <p style="color: var(--mist-2); margin-bottom: 40px;">Latest 200 submissions. Add authentication before deploying publicly.</p>
+
+    <div style="overflow-x: auto; border: 1px solid var(--hairline); border-radius: 8px;">
+      <table style="width: 100%; border-collapse: collapse; font-family: var(--f-mono); font-size: 12px;">
+        <thead>
+          <tr style="background: var(--carbon); border-bottom: 1px solid var(--hairline);">
+            <th style="text-align:left; padding: 14px; color: var(--mist); letter-spacing: 0.1em; text-transform: uppercase; font-size: 10px;">When</th>
+            <th style="text-align:left; padding: 14px; color: var(--mist); letter-spacing: 0.1em; text-transform: uppercase; font-size: 10px;">Audience</th>
+            <th style="text-align:left; padding: 14px; color: var(--mist); letter-spacing: 0.1em; text-transform: uppercase; font-size: 10px;">Name</th>
+            <th style="text-align:left; padding: 14px; color: var(--mist); letter-spacing: 0.1em; text-transform: uppercase; font-size: 10px;">Email</th>
+            <th style="text-align:left; padding: 14px; color: var(--mist); letter-spacing: 0.1em; text-transform: uppercase; font-size: 10px;">Phone</th>
+            <th style="text-align:left; padding: 14px; color: var(--mist); letter-spacing: 0.1em; text-transform: uppercase; font-size: 10px;">Company</th>
+            <th style="text-align:left; padding: 14px; color: var(--mist); letter-spacing: 0.1em; text-transform: uppercase; font-size: 10px;">Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lead in leads %}
+          <tr style="border-bottom: 1px solid var(--hairline);">
+            <td style="padding: 14px; color: var(--mist-2); white-space: nowrap;">{{ lead.created_at }}</td>
+            <td style="padding: 14px;"><span style="padding: 2px 8px; background: var(--ion-soft); color: var(--ion); border-radius: 100px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;">{{ lead.audience }}</span></td>
+            <td style="padding: 14px;">{{ lead.name or '—' }}</td>
+            <td style="padding: 14px; color: var(--white);">{{ lead.email }}</td>
+            <td style="padding: 14px; color: var(--mist-2);">{{ lead.phone or '—' }}</td>
+            <td style="padding: 14px; color: var(--mist-2);">{{ lead.company or '—' }}</td>
+            <td style="padding: 14px; color: var(--mist);">{{ lead.source or '—' }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="7" style="padding: 40px; text-align: center; color: var(--mist);">No leads yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <h2 style="margin: 80px 0 24px;">Newsletter subscribers ({{ subscribers|length }})</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px;">
+      {% for sub in subscribers %}
+      <div style="padding: 14px; border: 1px solid var(--hairline); border-radius: 4px; font-family: var(--f-mono); font-size: 12px;">
+        <div style="color: var(--white);">{{ sub.email }}</div>
+        <div style="color: var(--mist); font-size: 10px; margin-top: 4px;">{{ sub.created_at }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

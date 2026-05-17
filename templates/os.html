@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Hyoxen OS — Fleet Software{% endblock %}
+{% block content %}
+<section style="padding: 180px 0 80px;">
+  <div class="container">
+    <div class="os-header reveal">
+      <span class="eyebrow">— HYOXEN OS</span>
+      <h1 style="font-size: clamp(44px, 6vw, 80px); margin: 20px 0;">One platform for every<br>wheel you operate.</h1>
+      <p style="font-size: 17px; color: var(--mist-2); line-height: 1.6;">The SaaS layer for fleets, delivery companies, and dealerships — sold by the vehicle, by the month, or by the kilometer.</p>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 0 0 100px;">
+  <div class="container">
+    {% include 'partials/os_dashboard.html' %}
+  </div>
+</section>
+
+<section style="padding: 60px 0 120px;">
+  <div class="container" style="max-width: 720px;">
+    <h2 style="margin-bottom: 32px;">Book a fleet demo.</h2>
+    <form id="fleet-form" class="lead-form">
+      <input type="hidden" name="audience" value="fleet" />
+      <div class="form-row">
+        <label>Name<input type="text" name="name" required /></label>
+        <label>Email<input type="email" name="email" required /></label>
+      </div>
+      <div class="form-row">
+        <label>Company<input type="text" name="company" required /></label>
+        <label>Fleet size<input type="text" name="phone" placeholder="e.g. 50 vehicles" /></label>
+      </div>
+      <label>Tell us about your use case<textarea name="message" rows="3"></textarea></label>
+      <button type="submit" class="btn btn-primary" style="margin-top: 16px;">Schedule Demo <span class="arrow">→</span></button>
+      <div id="fleet-msg" class="mono" style="font-size:12px; margin-top: 14px; min-height: 14px; color: var(--mint);"></div>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('fleet-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  const msg = document.getElementById('fleet-msg');
+  msg.textContent = 'Submitting...';
+  try {
+    const res = await fetch('/api/lead', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+    const json = await res.json();
+    msg.textContent = json.ok ? '✓ ' + json.message : '✗ ' + (json.error || '');
+    if (json.ok) e.target.reset();
+  } catch (err) { msg.textContent = '✗ Network error.'; }
+});
+</script>
+{% endblock %}

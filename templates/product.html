@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} — Hyoxen{% endblock %}
+{% block description %}{{ product.tagline }} {{ product.description }}{% endblock %}
+
+{% block content %}
+
+<section class="hero" style="min-height:auto; padding: 160px 0 80px;">
+  <div class="container hero-grid">
+    <div class="hero-left reveal">
+      <span class="eyebrow">{{ product.category }} · {{ product.index }}</span>
+      <h1 style="font-size: clamp(48px, 7vw, 88px);">{{ product.name }}</h1>
+      <p class="hero-sub" style="font-family: var(--f-serif); font-style: italic; font-size: 22px; color: var(--white); max-width: 540px;">{{ product.tagline }}</p>
+      <p style="font-size: 16px; line-height: 1.7; color: var(--mist-2); margin-bottom: 36px; max-width: 540px;">{{ product.description }}</p>
+      <div class="hero-ctas">
+        <a href="#reserve" class="btn btn-primary">Reserve · {{ product.price_from }} <span class="arrow">→</span></a>
+        <a href="#specs" class="btn btn-ghost">Full Specs <span class="arrow">↓</span></a>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal" style="display:flex; align-items:center; justify-content:center;">
+      <div style="width:100%; max-width:540px; aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; border:1px solid var(--hairline); border-radius:8px; background: radial-gradient(circle at 50% 50%, {{ product.color }}22, transparent 70%); overflow: hidden;">
+        {% if product.image %}
+          <img src="{{ url_for('static', filename='images/' ~ product.image) }}" alt="{{ product.name }}" style="width: 92%; height: auto; max-height: 90%; object-fit: contain;" />
+        {% else %}
+          {% include 'partials/product_svg_' ~ product.slug ~ '.html' ignore missing %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Spec Strip -->
+<section style="padding: 60px 0;" id="specs">
+  <div class="container">
+    <div class="numbers-grid" style="grid-template-columns: repeat({{ product.specs|length }}, 1fr);">
+      {% for spec in product.specs %}
+      <div class="num-cell">
+        <div class="v">{{ spec.value }}{% if spec.unit %}<sup style="color:var(--mist); font-size:0.45em; margin-left:4px;">{{ spec.unit }}</sup>{% endif %}</div>
+        <div class="l">{{ spec.label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Features grid -->
+<section style="padding: 100px 0;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="left">
+        <span class="eyebrow">— FEATURES · STANDARD</span>
+        <h2 style="margin-top:20px;">Intelligence,<br>not options.</h2>
+      </div>
+      <div class="right">Every Hyoxen ships fully equipped. No trim levels, no upsells. The intelligence layer is the base spec.</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+      {% for feature in product.features %}
+      <div style="padding: 28px; border: 1px solid var(--hairline); border-radius: 6px; background: var(--carbon);">
+        <div class="mono" style="font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ion); margin-bottom: 14px;">— STANDARD</div>
+        <div style="font-family:var(--f-display); font-size:18px; font-weight:400;">{{ feature }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Reserve / Lead form -->
+<section style="padding: 100px 0; border-top: 1px solid var(--hairline);" id="reserve">
+  <div class="container" style="max-width: 720px;">
+    <div class="section-header reveal" style="margin-bottom: 40px;">
+      <div class="left">
+        <span class="eyebrow">— RESERVE</span>
+        <h2 style="margin-top:20px;">Get a {{ product.name }}.</h2>
+      </div>
+    </div>
+
+    <form id="reserve-form" class="lead-form">
+      <input type="hidden" name="audience" value="rider" />
+      <input type="hidden" name="source" value="{{ product.slug }}" />
+      <div class="form-row">
+        <label>Full name<input type="text" name="name" required /></label>
+        <label>Email<input type="email" name="email" required /></label>
+      </div>
+      <div class="form-row">
+        <label>Phone<input type="tel" name="phone" required /></label>
+        <label>City<input type="text" name="company" placeholder="Where will you ride?" /></label>
+      </div>
+      <label>Anything we should know?<textarea name="message" rows="3"></textarea></label>
+      <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Reserve {{ product.name }} <span class="arrow">→</span></button>
+      <div id="reserve-msg" class="mono" style="font-size:12px; margin-top: 16px; min-height: 16px; color: var(--mint);"></div>
+    </form>
+  </div>
+</section>
+
+<!-- Siblings / Compare -->
+<section style="padding: 100px 0; border-top: 1px solid var(--hairline);">
+  <div class="container">
+    <div class="section-header reveal" style="margin-bottom: 40px;">
+      <div class="left">
+        <span class="eyebrow">— EXPLORE THE FLEET</span>
+        <h2 style="margin-top:20px;">Other Hyoxen vehicles.</h2>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;">
+      {% for slug, p in siblings.items() %}
+      <a href="{{ url_for('vehicle_detail', slug=slug) }}" class="product-card" style="min-height: 320px; aspect-ratio: auto;">
+        <div class="top">
+          <span class="tag">{{ p.category }}</span>
+          <span class="index">{{ p.index }}</span>
+        </div>
+        <div class="visual">
+          {% if p.image %}
+            <img src="{{ url_for('static', filename='images/' ~ p.image) }}" alt="{{ p.name }}" loading="lazy" style="max-width: 100%; max-height: 180px; object-fit: contain;" />
+          {% else %}
+            {% include 'partials/product_svg_' ~ slug ~ '.html' ignore missing %}
+          {% endif %}
+        </div>
+        <h3 style="font-size:24px;">{{ p.name }}</h3>
+        <div class="pitch" style="font-size:14px;">{{ p.tagline }}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('reserve-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const data = Object.fromEntries(new FormData(form).entries());
+  const msg = document.getElementById('reserve-msg');
+  msg.textContent = 'Submitting...';
+  try {
+    const res = await fetch('/api/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    msg.textContent = json.ok ? '✓ ' + json.message : '✗ ' + (json.error || 'Something went wrong');
+    if (json.ok) form.reset();
+  } catch (err) {
+    msg.textContent = '✗ Network error. Please try again.';
+  }
+});
+</script>
+{% endblock %}

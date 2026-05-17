@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Exports — Hyoxen{% endblock %}
+{% block content %}
+<section style="padding: 180px 0 80px;">
+  <div class="container">
+    <div class="globe-grid">
+      <div class="reveal">
+        <span class="eyebrow">— GLOBAL AMBITIONS</span>
+        <h1 style="font-size: clamp(44px, 6vw, 80px); margin-top: 20px;">Built in India.<br>Wired for the <span style="font-family:var(--f-serif); font-style:italic; color:var(--ion);">world.</span></h1>
+        <p style="font-size: 17px; color: var(--mist-2); line-height: 1.6; margin: 32px 0;">Export programs live in 4 markets. 5 more in pilot. Hyoxen vehicles, ZapTap stations, and Hyoxen OS — packaged for fleet operators across Asia, Africa, and LATAM.</p>
+
+        <div class="globe-list">
+          {% for m in markets %}
+          <div class="globe-row">
+            <span class="idx mono">{{ m.idx }}</span>
+            <span class="name">{{ m.country }} · {{ m.city }}</span>
+            <span class="status {{ m.status }} mono">{{ m.status|capitalize }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="globe-vis reveal">
+        {% include 'partials/globe.html' %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

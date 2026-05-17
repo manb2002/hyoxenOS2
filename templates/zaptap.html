@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}ZapTap — Hyoxen Charging Network{% endblock %}
+{% block content %}
+<section style="padding: 180px 0 80px;">
+  <div class="container">
+    <div class="zaptap-grid">
+      <div class="reveal">
+        <span class="eyebrow">— ZAPTAP NETWORK</span>
+        <h1 style="font-size: clamp(44px, 6vw, 80px); margin-top: 20px;">Swap.<br><span style="color:var(--ion); font-family:var(--f-display);">Don't wait.</span></h1>
+        <p style="font-size: 17px; color: var(--mist-2); line-height: 1.6; margin: 32px 0;">India's first AI-routed swappable battery network. 90-second swaps. Solar-ready stations. Open to fleets. The grid that thinks ahead of you.</p>
+        <a href="{{ url_for('dealers') }}" class="btn btn-primary">Partner with us <span class="arrow">→</span></a>
+      </div>
+      <div class="station reveal">
+        {% include 'partials/zaptap_station.html' %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

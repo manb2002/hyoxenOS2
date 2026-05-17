@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Vehicles — Hyoxen{% endblock %}
+{% block content %}
+<section style="padding: 180px 0 80px;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="left">
+        <span class="eyebrow">— THE FLEET</span>
+        <h1 style="font-size: clamp(48px, 7vw, 96px); margin-top: 20px;">Five vehicles.<br>One operating system.</h1>
+      </div>
+      <div class="right" style="max-width: 360px;">From daily commute to last-mile cargo, every Hyoxen ships with GPS, swappable battery, smart BMS, IoT telemetry, and OTA updates — standard.</div>
+    </div>
+  </div>
+</section>
+
+<section style="padding: 40px 0 120px;">
+  <div class="container">
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
+      {% for slug, p in products.items() %}
+      <a href="{{ url_for('vehicle_detail', slug=slug) }}" class="product-card">
+        <div class="top">
+          <span class="tag">{{ p.category }}</span>
+          <span class="index">{{ p.index }}</span>
+        </div>
+        <div class="visual">
+          {% if p.image %}
+            <img src="{{ url_for('static', filename='images/' ~ p.image) }}" alt="{{ p.name }}" loading="lazy" style="max-width: 100%; max-height: 220px; object-fit: contain;" />
+          {% else %}
+            {% include 'partials/product_svg_' ~ slug ~ '.html' ignore missing %}
+          {% endif %}
+        </div>
+        <h3>{{ p.name }}</h3>
+        <div class="pitch">{{ p.tagline }}</div>
+        <div class="specs">
+          {% for spec in p.specs %}
+          <div class="spec">
+            <span class="v">{{ spec.value }}{% if spec.unit %}<sub style="font-size:0.55em;color:var(--mist)">{{ spec.unit }}</sub>{% endif %}</span>
+            <span class="l">{{ spec.label }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

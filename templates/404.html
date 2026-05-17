@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Not Found — Hyoxen{% endblock %}
+{% block content %}
+<section style="min-height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center;">
+  <div class="container">
+    <span class="eyebrow" style="justify-content: center;">— ERROR · 404</span>
+    <h1 style="font-size: clamp(64px, 12vw, 160px); margin: 24px 0; font-family: var(--f-display); font-weight: 200; letter-spacing: -0.04em;">You've reached<br>the <span style="font-family:var(--f-serif); font-style:italic; color:var(--ion);">edge of the grid.</span></h1>
+    <p style="font-size: 17px; color: var(--mist-2); margin-bottom: 40px;">This page doesn't exist — yet. Let's get you back on route.</p>
+    <a href="{{ url_for('home') }}" class="btn btn-primary">Return Home <span class="arrow">→</span></a>
+  </div>
+</section>
+{% endblock %}
